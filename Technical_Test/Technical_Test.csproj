@@ -16,11 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Model\" />
-    <Folder Include="Views\Brand\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\resources\Brand.jpg" />
     <None Include="wwwroot\resources\Colection.jpg" />
   </ItemGroup>

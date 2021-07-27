@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "Brands and Models";
+    int i = 0;
+}
+
+<h1>Brands and Models</h1>
+<hr />
+
+<div id="accordion">
+    @foreach(var bran in (ViewData["Brands"] as List<Brand>))
+    {
+        i += 1;
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_@i.ToString()" aria-expanded="true" aria-controls="collapse_@i.ToString()">
+                    @bran.Descrip
+                </button>
+            </h5>
+        </div>
+        <div id="collapse_@i.ToString()" class="collapse" aria-labelledby="heading_@i.ToString()" data-parent="#accordion">
+            <div class="card-body">                
+                    @foreach (var mod in (ViewData["Models"] as List<Model>)?.Where(x => x.Brand_id.Equals(bran.Id)))
+                    {
+                        <div class="card card-body">@mod.Descrip</div>
+                    }                
+            </div>
+        </div>
+    </div>
+    }
+</div>

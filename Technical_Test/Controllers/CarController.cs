@@ -20,65 +20,6 @@ namespace Technical_Test.Controllers
             Configuration = config;
         }
 
-        private List<SelectListItem> getBrands()
-        {
-            var lSelec = new List<SelectListItem>();
-            var brandServices = new BrandService(Configuration);
-
-            lSelec.Add(new SelectListItem() { Text = "Select a brand", Value = String.Empty });
-
-            foreach (var brand in brandServices.getAll())
-            {
-                lSelec.Add(new SelectListItem() { Text = brand.Descrip, Value = brand.Id });
-            }
-
-            return lSelec;
-        }
-
-        private List<SelectListItem> getModelbyIdBrand()
-        {
-            var lSelec = new List<SelectListItem>();
-            var brandServices = new BrandService(Configuration);
-
-            foreach (var brand in brandServices.getAll())
-            {
-                lSelec.Add(new SelectListItem() { Text = brand.Descrip, Value = brand.Id });
-            }
-
-            return lSelec;
-        }
-
-        private List<SelectListItem> getModels(string brand_id)
-        {
-            var modelServices = new ModelService(Configuration);
-
-            var lSelec = new List<SelectListItem>();            
-
-            lSelec.Add(new SelectListItem() { Text = "Select a model", Value = String.Empty });
-
-            foreach (var model in modelServices.getbyIdBrand(brand_id))
-            {
-                lSelec.Add(new SelectListItem() { Text = model.Descrip, Value = model.Id });
-            }
-            return lSelec;
-        }
-
-
-
-        [HttpPost]
-        public JsonResult LoadModelsByIdBrand(string brand_id)
-        {
-            if (!String.IsNullOrEmpty(brand_id))
-            {                
-                return Json(new SelectList(getModels(brand_id), "Value", "Text"));
-            }
-            else
-            {
-                return null;
-            }
-            
-        }
-
         public IActionResult listCars()
         {
             var carServices = new CarService(Configuration);
@@ -114,6 +55,7 @@ namespace Technical_Test.Controllers
                 }
                 else
                 {
+                    //Classify the errors cast
                     ViewBag.MessageError = "Errors: ";
                     ViewBag.MessageError += "<lu>";
                     foreach (var modelState in ViewData.ModelState.Values)
@@ -180,6 +122,7 @@ namespace Technical_Test.Controllers
                 }
                 else
                 {
+                    //Classify the errors cast
                     ViewBag.MessageError = "Errors: ";
                     ViewBag.MessageError += "<lu>";
                     foreach (var modelState in ViewData.ModelState.Values)
@@ -202,6 +145,65 @@ namespace Technical_Test.Controllers
             {
                 ViewBag.MessageError = $"Error modifying the car: {e.Message}";
                 return View(car);
+            }
+
+        }
+
+        /// <summary>
+        /// Get a list of SelectListItem of brands, that it'll be used for the DropBoxList
+        /// </summary>
+        /// <returns></returns>
+        private List<SelectListItem> getBrands()
+        {
+            var lSelec = new List<SelectListItem>();
+            var brandServices = new BrandService(Configuration);
+
+            lSelec.Add(new SelectListItem() { Text = "Select a brand", Value = String.Empty });
+
+            foreach (var brand in brandServices.getAll())
+            {
+                lSelec.Add(new SelectListItem() { Text = brand.Descrip, Value = brand.Id });
+            }
+
+            return lSelec;
+        }
+
+        /// <summary>
+        /// Get a list of SelectListItem of models filtering by id brand, that it'll be used for the DropBoxList
+        /// </summary>
+        /// <param name="brand_id">id of brand (string)</param>
+        /// <returns></returns>
+        private List<SelectListItem> getModels(string brand_id)
+        {
+            var modelServices = new ModelService(Configuration);
+
+            var lSelec = new List<SelectListItem>();
+
+            lSelec.Add(new SelectListItem() { Text = "Select a model", Value = String.Empty });
+
+            foreach (var model in modelServices.getbyIdBrand(brand_id))
+            {
+                lSelec.Add(new SelectListItem() { Text = model.Descrip, Value = model.Id });
+            }
+            return lSelec;
+        }
+
+        /// <summary>
+        ///  Get a Json of list of SelectListItem of models filtering by id brand, that it'll be used for the DropBoxList
+        ///  this
+        /// </summary>
+        /// <param name="brand_id">id of brand (string)</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult LoadModelsByIdBrand(string brand_id)
+        {
+            if (!String.IsNullOrEmpty(brand_id))
+            {
+                return Json(new SelectList(getModels(brand_id), "Value", "Text"));
+            }
+            else
+            {
+                return null;
             }
 
         }

@@ -13,6 +13,10 @@ namespace Technical_Test.Services
     {
         private readonly IMongoCollection<Model> models;
 
+        /// <summary>
+        /// Initialization the connection
+        /// </summary>
+        /// <param name="config"></param>
         public ModelService(IConfiguration config)
         {
             MongoClient client = new MongoClient(config.GetConnectionString("TechnicalTestDDBB"));
@@ -20,37 +24,68 @@ namespace Technical_Test.Services
             models = ddbb.GetCollection<Model>("Models");
         }
 
+        /// <summary>
+        /// Get a list with all rows of the collection
+        /// </summary>
+        /// <returns></returns>
         public List<Model> getAll()
         {
             return models.Find(x => true).ToList();
         }
 
+        /// <summary>
+        /// Get a document through of identify getted by parameters
+        /// </summary>
+        /// <param name="id">identify of document (String)</param>
+        /// <returns></returns>
         public Model getbyID(string id)
         {
             return models.Find(x => x.Id.Equals(id)).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Get a document through of identify of brand getted by parameters
+        /// </summary>
+        /// <param name="brand_id">Identify of brand (String)</param>
+        /// <returns></returns>
         public List<Model> getbyIdBrand(string brand_id)
         {
             return models.Find(x => x.Brand_id.Equals(brand_id)).ToList();
         }
 
+        /// <summary>
+        /// Insert into collection a document passed by parameters
+        /// </summary>
+        /// <param name="brand">document (Model)</param>
+        /// <returns></returns>
         public Model New(Model model)
         {
             models.InsertOne(model);
             return model;
         }
 
+        /// <summary>
+        /// Update a document from collection, replancing a old document by the new document passed by parameters
+        /// </summary>
+        /// <param name="model">new document (Model)</param>
         public void Update(Model model)
         {
             models.ReplaceOne(x => x.Id.Equals(model.Id), model);
         }
 
+        /// <summary>
+        /// Delete from collection the document passed by parameters
+        /// </summary>
+        /// <param name="model">document to delete (Model)</param>
         public void Delete(Model model)
         {
             models.DeleteOne(x => x.Id.Equals(model.Id));
         }
 
+        /// <summary>
+        /// Delete from collection a document with a identify of document passed by parameters
+        /// </summary>
+        /// <param name="id">identify of document (String)</param>
         public void DeletebyId(string id)
         {
             models.DeleteOne(x => x.Id.Equals(id));

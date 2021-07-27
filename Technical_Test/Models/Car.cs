@@ -24,7 +24,7 @@ namespace Technical_Test.Models
         public string Model_id { get; set; }
 
         [Required(ErrorMessage = "Price is required")]
-        [DataType(DataType.Currency, ErrorMessage = "The price should be a number"), DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Currency, ErrorMessage = "The price should be a number")]
         public double? Price { get; set; }
 
     }
