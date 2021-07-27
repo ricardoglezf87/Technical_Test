@@ -30,7 +30,7 @@ namespace Technical_Test.Services
         }
 
         public Car New(Car car)
-        {
+        {            
             cars.InsertOne(car);
             return car;
         }

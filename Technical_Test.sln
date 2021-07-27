@@ -10,6 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{C7B9D4A4-DABC-4604-9985-159C75B2316A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{87E083D1-A7CE-4258-A6C6-EA388B560534}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\Ultebra Solutions - Technical Test.pdf = ..\..\..\Downloads\Ultebra Solutions - Technical Test.pdf
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{71702168-DA06-4E88-9386-705EE3640A9C}"
 EndProject

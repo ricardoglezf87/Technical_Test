@@ -25,7 +25,7 @@ namespace Technical_Test.Controllers
             var lSelec = new List<SelectListItem>();
             var brandServices = new BrandService(Configuration);
 
-            lSelec.Add(new SelectListItem() { Text = "Select a brand", Value = "0" });
+            lSelec.Add(new SelectListItem() { Text = "Select a brand", Value = String.Empty });
 
             foreach (var brand in brandServices.getAll())
             {
@@ -54,12 +54,16 @@ namespace Technical_Test.Controllers
 
             var lSelec = new List<SelectListItem>();            
 
+            lSelec.Add(new SelectListItem() { Text = "Select a model", Value = String.Empty });
+
             foreach (var model in modelServices.getbyIdBrand(brand_id))
             {
                 lSelec.Add(new SelectListItem() { Text = model.Descrip, Value = model.Id });
             }
             return lSelec;
         }
+
+
 
         [HttpPost]
         public JsonResult LoadModelsByIdBrand(string brand_id)
@@ -73,6 +77,20 @@ namespace Technical_Test.Controllers
                 return null;
             }
             
+        }
+
+        public IActionResult listCars()
+        {
+            var carServices = new CarService(Configuration);
+            var cars = carServices.getAll();
+
+            var modelServices = new ModelService(Configuration);
+            ViewData["Models"] = modelServices.getAll();
+
+            var brandServices = new BrandService(Configuration);
+            ViewData["Brands"] = brandServices.getAll();
+
+            return View(cars);
         }
 
         public IActionResult newCar()
@@ -89,12 +107,25 @@ namespace Technical_Test.Controllers
                 if (ModelState.IsValid)
                 {
                     var carService = new CarService(Configuration);
+                    car.NumberPlate = car.NumberPlate.ToUpper();
                     carService.New(car);
                     ViewBag.Message = "Car added Suscessfully!";
                     ModelState.Clear();
                 }
                 else
                 {
+                    ViewBag.MessageError = "Errors: ";
+                    ViewBag.MessageError += "<lu>";
+                    foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (var error in modelState.Errors)
+                        {
+                            ViewBag.MessageError += $"<li>{error.ErrorMessage}</li>";
+                        }
+                    }
+
+                    ViewBag.MessageError += "</lu>";
+
                     ViewData["Models"] = getModels(car.Brand_id);
                 }
 
@@ -104,15 +135,76 @@ namespace Technical_Test.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.Message = $"Error adding the car: {e.Message}";
+                ViewBag.MessageError = $"Error adding the car: {e.Message}";
                 return View();
             }
 
         }
 
-        public IActionResult listCars()
+        public IActionResult deleteCar(string car_id)
         {
-            return View();
+            var carService = new CarService(Configuration);
+            var car = carService.getbyID(car_id);
+            return View(car);
         }
+
+        [HttpPost]
+        public IActionResult deleteCar(Car car)
+        {
+            var carService = new CarService(Configuration);
+            carService.Delete(car);
+            return RedirectToAction("listCars","Car");
+        }
+
+        public IActionResult updateCar(string car_id)
+        {
+            var carService = new CarService(Configuration);
+            var car = carService.getbyID(car_id);
+            ViewData["Brands"] = getBrands();
+            ViewData["Models"] = getModels(car.Brand_id);
+            return View(car);
+        }
+
+        [HttpPost]
+        public ActionResult updateCar(Car car)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var carService = new CarService(Configuration);
+                    car.NumberPlate = car.NumberPlate.ToUpper();
+                    carService.Update(car);
+                    ViewBag.Message = "Car modify Suscessfully!";
+                    ModelState.Clear();
+                }
+                else
+                {
+                    ViewBag.MessageError = "Errors: ";
+                    ViewBag.MessageError += "<lu>";
+                    foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (var error in modelState.Errors)
+                        {
+                            ViewBag.MessageError += $"<li>{error.ErrorMessage}</li>";
+                        }
+                    }
+
+                    ViewBag.MessageError += "</lu>";
+                    ViewData["Models"] = getModels(car.Brand_id);
+                }
+
+                ViewData["Brands"] = getBrands();
+
+                return View(car);
+            }
+            catch (Exception e)
+            {
+                ViewBag.MessageError = $"Error modifying the car: {e.Message}";
+                return View(car);
+            }
+
+        }
+
     }
 }

@@ -4,7 +4,7 @@
 @model Technical_Test.Models.Car
 
 @{
-    ViewData["Title"] = "Add new car";
+    ViewData["Title"] = "Modify car";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -25,19 +25,20 @@
     </div>
 }
 
-
 <section class="content jumbotron">
-    @using (Html.BeginForm("newCar", "Car", FormMethod.Post))
+    @using (Html.BeginForm("updateCar", "Car", FormMethod.Post))
     {
         <div class="form-group">
+            @Html.HiddenFor(m => m.Id)
             @Html.LabelFor(m => m.NumberPlate, "Number plate")
-            @Html.TextBoxFor(m => m.NumberPlate, new { @class = "form-control", placeholder = "Write number plate" })
+            @Html.TextBoxFor(m => m.NumberPlate, new { @class = "form-control", 
+                placeholder = "Write number plate", value = Model.NumberPlate})
         </div>
 
         <div class="form-group">
             @Html.LabelFor(m => m.Brand_id, "Brand")
             @Html.DropDownListFor(x => x.Brand_id, ViewData["Brands"] as List<SelectListItem>,
-                null, new { @class = "form-control", id = "cbBrand" })
+                null, new { @class = "form-control", id = "cbBrand", value = Model.Brand_id })
 
         </div>
 
@@ -46,15 +47,16 @@
             @Html.LabelFor(m => m.Model_id, "Model")
             @Html.DropDownListFor(x => x.Model_id, (ViewData["Models"] ??
                                                     new List<SelectListItem>() { new SelectListItem() { Text = "Select a model", Value = String.Empty } }) as List<SelectListItem>,
-                null, new { @class = "form-control", id = "cbModel" })
+                null, new { @class = "form-control", id = "cbModel", value = Model.Model_id })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(m => m.Price, "Price")
-            @Html.TextBoxFor(m => m.Price, new { @class = "form-control numeric", placeholder = "Write the price, use comma for decimals" })
+            @Html.TextBoxFor(m => m.Price, new { @class = "form-control numeric",
+           placeholder = "Write the price, use comma for decimals", value = Model.Price})
         </div>
 
-        <input type="submit" class="btn btn-primary" value="Add" />
+        <input type="submit" class="btn btn-primary" value="Modify" />
     }
 </section>
 

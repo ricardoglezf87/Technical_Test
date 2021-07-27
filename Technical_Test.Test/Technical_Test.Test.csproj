@@ -34,7 +34,9 @@
     <PackageReference Include="Selenium.WebDriver" Version="3.14.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EdgeDriverTest.cs" />
+    <Compile Include="brandTest.cs" />
+    <Compile Include="carTest.cs" />
+    <Compile Include="modelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
