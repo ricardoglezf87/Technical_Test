@@ -32,19 +32,7 @@ namespace Technical_Test.Services
 
         public List<Model> getbyIdBrand(string brand_id)
         {
-            return models.Find(x => x.Brand_Id.Equals(brand_id)).ToList();
-        }
-
-        public List<SelectListItem> getAll_toSelectListItem()
-        {
-            var lSelec = new List<SelectListItem>();
-
-            foreach (var model in getAll())
-            {
-                lSelec.Add(new SelectListItem() { Text = model.Descrip, Value = model.Id });
-            }
-
-            return lSelec;
+            return models.Find(x => x.Brand_id.Equals(brand_id)).ToList();
         }
 
         public Model New(Model model)

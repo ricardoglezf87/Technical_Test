@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using Technical_Test.Models;
 using Technical_Test.Services;
 
 namespace Technical_Test.Controllers
@@ -23,6 +24,8 @@ namespace Technical_Test.Controllers
         {
             var lSelec = new List<SelectListItem>();
             var brandServices = new BrandService(Configuration);
+
+            lSelec.Add(new SelectListItem() { Text = "Select a brand", Value = "0" });
 
             foreach (var brand in brandServices.getAll())
             {
@@ -45,27 +48,66 @@ namespace Technical_Test.Controllers
             return lSelec;
         }
 
-        [HttpGet]
-        public JsonResult LoadModelsByIdBrand(string brand_id)
+        private List<SelectListItem> getModels(string brand_id)
         {
             var modelServices = new ModelService(Configuration);
-            
-            var lSelec = new List<SelectListItem>();
+
+            var lSelec = new List<SelectListItem>();            
 
             foreach (var model in modelServices.getbyIdBrand(brand_id))
             {
                 lSelec.Add(new SelectListItem() { Text = model.Descrip, Value = model.Id });
             }
+            return lSelec;
+        }
 
-            return Json(lSelec);
+        [HttpPost]
+        public JsonResult LoadModelsByIdBrand(string brand_id)
+        {
+            if (!String.IsNullOrEmpty(brand_id))
+            {                
+                return Json(new SelectList(getModels(brand_id), "Value", "Text"));
+            }
+            else
+            {
+                return null;
+            }
             
         }
 
         public IActionResult newCar()
         {            
-            ViewBag.Brands = getBrands();
-
+            ViewData["Brands"] = getBrands();            
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult newCar(Car car)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var carService = new CarService(Configuration);
+                    carService.New(car);
+                    ViewBag.Message = "Car added Suscessfully!";
+                    ModelState.Clear();
+                }
+                else
+                {
+                    ViewData["Models"] = getModels(car.Brand_id);
+                }
+
+                ViewData["Brands"] = getBrands();
+
+                return View();
+            }
+            catch (Exception e)
+            {
+                ViewBag.Message = $"Error adding the car: {e.Message}";
+                return View();
+            }
+
         }
 
         public IActionResult listCars()

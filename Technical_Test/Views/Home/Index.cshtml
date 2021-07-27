@@ -3,22 +3,22 @@
 }
 
 <div class="jumbotron">
-    <h1>Home: Add you Cars</h1>
+    <h1>Home: Add you cars</h1>
     <p class="lead">Add your cars!, You can have the control about all of them</p>
-    <p>@Html.ActionLink("Add a Car", "newCar", "Car",null,new { @class="btn btn-primary btn-lg"})</p>
+    <p>@Html.ActionLink("Add a car", "newCar", "Car",null,new { @class="btn btn-primary btn-lg"})</p>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Model1</h2>
-        <p></p>
+    <div class="col-md-6 align-content-center">
+        <img src="~/resources/Colection.jpg" class="img-fluid"  />
+        <h2>My cars</h2>
+        <p>Get the list of my collection cars</p>
+        <p>@Html.ActionLink("More", "listCars", "Car", null, new { @class = "btn btn-primary btn-lg" })</p>
     </div>
-    <div class="col-md-4">
-        <h2>Model1</h2>
-        <p></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Model1</h2>
-        <p></p>
+    <div class="col-md-6 align-content-center">
+        <img src="~/resources/Brand.jpg" class="img-fluid" />
+        <h2>Brands and models avaibles</h2>
+        <p>Get the list of all brand and models avaibles</p>
+        <p>@Html.ActionLink("More", "listBrands", "Brand", null, new { @class = "btn btn-primary btn-lg" })</p>
     </div>
 </div>

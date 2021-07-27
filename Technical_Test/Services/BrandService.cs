@@ -25,18 +25,6 @@ namespace Technical_Test.Services
             return brands.Find(x => true).ToList();
         }
 
-        public List<SelectListItem> getAll_toSelectListItem()
-        {
-            var lSelec = new List<SelectListItem>();
-
-            foreach (var brand in getAll())
-            {
-                lSelec.Add(new SelectListItem() { Text = brand.Descrip, Value = brand.Id });
-            }
-
-            return lSelec;
-        }
-
         public Brand getbyID(string id)
         {
             return brands.Find(x => x.Id.Equals(id)).FirstOrDefault();

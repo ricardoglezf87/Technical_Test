@@ -15,10 +15,10 @@ namespace Technical_Test.Models
         public string Id { get; set; }
         
         [Required(ErrorMessage ="Brand is required")]
-        public int Brand_id { get; set; }
+        public string Brand_id { get; set; }
 
         [Required(ErrorMessage = "Model is required")]
-        public int Model_id { get; set; }
+        public string Model_id { get; set; }
 
         [Required(ErrorMessage = "Price is required")]
         public double Price { get; set; }

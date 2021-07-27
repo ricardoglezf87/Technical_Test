@@ -12,7 +12,7 @@ namespace Technical_Test.Models
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public string Brand_Id { get; set; }
+        public string Brand_id { get; set; }
 
         public string Descrip { get; set; }
     }
