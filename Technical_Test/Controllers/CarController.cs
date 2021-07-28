@@ -7,29 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Technical_Test.Models;
-using Technical_Test.Services;
+using Technical_Test.DAL;
 
 namespace Technical_Test.Controllers
 {
     public class CarController : Controller
     {
-        private readonly IConfiguration Configuration;
-
-        public CarController(IConfiguration config)
-        {
-            Configuration = config;
-        }
-
         public IActionResult listCars()
-        {
-            var carServices = new CarService(Configuration);
-            var cars = carServices.getAll();
+        {            
+            var cars = CarManager.getAll();
 
-            var modelServices = new ModelService(Configuration);
-            ViewData["Models"] = modelServices.getAll();
+            ViewData["Models"] = ModelManager.getAll();
 
-            var brandServices = new BrandService(Configuration);
-            ViewData["Brands"] = brandServices.getAll();
+            ViewData["Brands"] = BrandManger.getAll();
 
             return View(cars);
         }
@@ -46,10 +36,9 @@ namespace Technical_Test.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {
-                    var carService = new CarService(Configuration);
+                {                    
                     car.NumberPlate = car.NumberPlate.ToUpper();
-                    carService.New(car);
+                    CarManager.New(car);
                     ViewBag.Message = "Car added Suscessfully!";
                     ModelState.Clear();
                 }
@@ -84,24 +73,21 @@ namespace Technical_Test.Controllers
         }
 
         public IActionResult deleteCar(string car_id)
-        {
-            var carService = new CarService(Configuration);
-            var car = carService.getbyID(car_id);
+        {            
+            var car = CarManager.getbyID(car_id);
             return View(car);
         }
 
         [HttpPost]
         public IActionResult deleteCar(Car car)
-        {
-            var carService = new CarService(Configuration);
-            carService.Delete(car);
+        {            
+            CarManager.Delete(car);
             return RedirectToAction("listCars","Car");
         }
 
         public IActionResult updateCar(string car_id)
-        {
-            var carService = new CarService(Configuration);
-            var car = carService.getbyID(car_id);
+        {            
+            var car = CarManager.getbyID(car_id);
             ViewData["Brands"] = getBrands();
             ViewData["Models"] = getModels(car.Brand_id);
             return View(car);
@@ -113,10 +99,9 @@ namespace Technical_Test.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {
-                    var carService = new CarService(Configuration);
+                {                    
                     car.NumberPlate = car.NumberPlate.ToUpper();
-                    carService.Update(car);
+                    CarManager.Update(car);
                     ViewBag.Message = "Car modify Suscessfully!";
                     ModelState.Clear();
                 }
@@ -155,12 +140,11 @@ namespace Technical_Test.Controllers
         /// <returns></returns>
         private List<SelectListItem> getBrands()
         {
-            var lSelec = new List<SelectListItem>();
-            var brandServices = new BrandService(Configuration);
+            var lSelec = new List<SelectListItem>();            
 
             lSelec.Add(new SelectListItem() { Text = "Select a brand", Value = String.Empty });
 
-            foreach (var brand in brandServices.getAll())
+            foreach (var brand in BrandManger.getAll())
             {
                 lSelec.Add(new SelectListItem() { Text = brand.Descrip, Value = brand.Id });
             }
@@ -174,14 +158,12 @@ namespace Technical_Test.Controllers
         /// <param name="brand_id">id of brand (string)</param>
         /// <returns></returns>
         private List<SelectListItem> getModels(string brand_id)
-        {
-            var modelServices = new ModelService(Configuration);
-
+        {            
             var lSelec = new List<SelectListItem>();
 
             lSelec.Add(new SelectListItem() { Text = "Select a model", Value = String.Empty });
 
-            foreach (var model in modelServices.getbyIdBrand(brand_id))
+            foreach (var model in ModelManager.getbyIdBrand(brand_id))
             {
                 lSelec.Add(new SelectListItem() { Text = model.Descrip, Value = model.Id });
             }

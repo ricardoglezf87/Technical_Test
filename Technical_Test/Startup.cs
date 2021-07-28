@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using Technical_Test.Services;
+using Technical_Test.Services.Setting;
 
 namespace Technical_Test
 {
@@ -27,7 +28,8 @@ namespace Technical_Test
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {                                    
+        {
+            Configuration.Get<AppSettings>();
             services.AddControllersWithViews();
         }
 

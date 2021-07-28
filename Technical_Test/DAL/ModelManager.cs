@@ -6,31 +6,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Technical_Test.Models;
+using Technical_Test.Services.Setting;
 
-namespace Technical_Test.Services
+namespace Technical_Test.DAL
 {
-    public class ModelService
+    public class ModelManager
     {
-        private readonly IMongoCollection<Model> models;
-
         /// <summary>
-        /// Initialization the connection
+        /// get the collection from database
         /// </summary>
-        /// <param name="config"></param>
-        public ModelService(IConfiguration config)
-        {
-            MongoClient client = new MongoClient(config.GetConnectionString("TechnicalTestDDBB"));
-            IMongoDatabase ddbb = client.GetDatabase("TechnicalTestDDBB");
-            models = ddbb.GetCollection<Model>("Models");
+        /// <returns></returns>
+        private static IMongoCollection<Model> loadCollection()
+        {           
+            MongoClient client = new MongoClient(AppSettings.ConnectionStrings.ServerAddress);
+            IMongoDatabase ddbb = client.GetDatabase(AppSettings.ConnectionStrings.DataBase);
+            return ddbb.GetCollection<Model>("Models");
         }
 
         /// <summary>
         /// Get a list with all rows of the collection
         /// </summary>
         /// <returns></returns>
-        public List<Model> getAll()
+        public static List<Model> getAll()
         {
-            return models.Find(x => true).ToList();
+            return loadCollection()?.Find(x => true).ToList();
         }
 
         /// <summary>
@@ -38,9 +37,9 @@ namespace Technical_Test.Services
         /// </summary>
         /// <param name="id">identify of document (String)</param>
         /// <returns></returns>
-        public Model getbyID(string id)
+        public static Model getbyID(string id)
         {
-            return models.Find(x => x.Id.Equals(id)).FirstOrDefault();
+            return loadCollection()?.Find(x => x.Id.Equals(id)).FirstOrDefault();
         }
 
         /// <summary>
@@ -48,9 +47,9 @@ namespace Technical_Test.Services
         /// </summary>
         /// <param name="brand_id">Identify of brand (String)</param>
         /// <returns></returns>
-        public List<Model> getbyIdBrand(string brand_id)
+        public static List<Model> getbyIdBrand(string brand_id)
         {
-            return models.Find(x => x.Brand_id.Equals(brand_id)).ToList();
+            return loadCollection()?.Find(x => x.Brand_id.Equals(brand_id)).ToList();
         }
 
         /// <summary>
@@ -58,9 +57,9 @@ namespace Technical_Test.Services
         /// </summary>
         /// <param name="brand">document (Model)</param>
         /// <returns></returns>
-        public Model New(Model model)
+        public static Model New(Model model)
         {
-            models.InsertOne(model);
+            loadCollection()?.InsertOne(model);
             return model;
         }
 
@@ -68,27 +67,27 @@ namespace Technical_Test.Services
         /// Update a document from collection, replancing a old document by the new document passed by parameters
         /// </summary>
         /// <param name="model">new document (Model)</param>
-        public void Update(Model model)
+        public static void Update(Model model)
         {
-            models.ReplaceOne(x => x.Id.Equals(model.Id), model);
+            loadCollection()?.ReplaceOne(x => x.Id.Equals(model.Id), model);
         }
 
         /// <summary>
         /// Delete from collection the document passed by parameters
         /// </summary>
         /// <param name="model">document to delete (Model)</param>
-        public void Delete(Model model)
+        public static void Delete(Model model)
         {
-            models.DeleteOne(x => x.Id.Equals(model.Id));
+            loadCollection()?.DeleteOne(x => x.Id.Equals(model.Id));
         }
 
         /// <summary>
         /// Delete from collection a document with a identify of document passed by parameters
         /// </summary>
         /// <param name="id">identify of document (String)</param>
-        public void DeletebyId(string id)
+        public static void DeletebyId(string id)
         {
-            models.DeleteOne(x => x.Id.Equals(id));
+            loadCollection()?.DeleteOne(x => x.Id.Equals(id));
         }
 
     }

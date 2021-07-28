@@ -6,31 +6,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Technical_Test.Models;
+using Technical_Test.Services.Setting;
 
-namespace Technical_Test.Services
+namespace Technical_Test.DAL
 {
-    public class BrandService
+    public class BrandManger
     {
-        private readonly IMongoCollection<Brand> brands;
-
         /// <summary>
-        /// Initialization the connection
+        /// get the collection from database
         /// </summary>
-        /// <param name="config"></param>
-        public BrandService(IConfiguration config)
+        /// <returns></returns>
+        private static IMongoCollection<Brand> loadCollection()
         {
-            MongoClient client = new MongoClient(config.GetConnectionString("TechnicalTestDDBB"));
-            IMongoDatabase ddbb = client.GetDatabase("TechnicalTestDDBB");
-            brands = ddbb.GetCollection<Brand>("Brands");
+            MongoClient client = new MongoClient(AppSettings.ConnectionStrings.ServerAddress);
+            IMongoDatabase ddbb = client.GetDatabase(AppSettings.ConnectionStrings.DataBase);
+            return ddbb.GetCollection<Brand>("Brands");
         }
 
         /// <summary>
         /// Get a list with all rows of the collection
         /// </summary>
         /// <returns></returns>
-        public List<Brand> getAll()
+        public static List<Brand> getAll()
         {            
-            return brands.Find(x => true).ToList();
+            return loadCollection()?.Find(x => true).ToList();
         }
 
         /// <summary>
@@ -38,9 +37,9 @@ namespace Technical_Test.Services
         /// </summary>
         /// <param name="id">identify of document (String)</param>
         /// <returns></returns>
-        public Brand getbyID(string id)
+        public static Brand getbyID(string id)
         {
-            return brands.Find(x => x.Id.Equals(id)).FirstOrDefault();
+            return loadCollection()?.Find(x => x.Id.Equals(id)).FirstOrDefault();
         }
 
         /// <summary>
@@ -48,9 +47,9 @@ namespace Technical_Test.Services
         /// </summary>
         /// <param name="brand">document (Brand)</param>
         /// <returns></returns>
-        public Brand New(Brand brand)
+        public static Brand New(Brand brand)
         {
-            brands.InsertOne(brand);
+            loadCollection()?.InsertOne(brand);
             return brand;
         }
 
@@ -58,27 +57,27 @@ namespace Technical_Test.Services
         /// Update a document from collection, replancing a old document by the new document passed by parameters
         /// </summary>
         /// <param name="model">new document (Brand)</param>
-        public void Update(Brand brand)
+        public static void Update(Brand brand)
         {
-            brands.ReplaceOne(x => x.Id.Equals(brand.Id), brand);
+            loadCollection()?.ReplaceOne(x => x.Id.Equals(brand.Id), brand);
         }
 
         /// <summary>
         /// Delete from collection the document passed by parameters
         /// </summary>
         /// <param name="model">document to delete (Brand)</param>
-        public void Delete(Brand brand)
+        public static void Delete(Brand brand)
         {
-            brands.DeleteOne(x => x.Id.Equals(brand.Id));
+            loadCollection()?.DeleteOne(x => x.Id.Equals(brand.Id));
         }
 
         /// <summary>
         /// Delete from collection a document with a identify of document passed by parameters
         /// </summary>
         /// <param name="id">identify of document (String)</param>
-        public void DeletebyId(string id)
+        public static void DeletebyId(string id)
         {
-            brands.DeleteOne(x => x.Id.Equals(id));
+            loadCollection()?.DeleteOne(x => x.Id.Equals(id));
         }
 
     }

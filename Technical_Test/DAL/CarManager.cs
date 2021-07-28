@@ -5,31 +5,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Technical_Test.Models;
+using Technical_Test.Services.Setting;
 
-namespace Technical_Test.Services
+namespace Technical_Test.DAL
 {
-    public class CarService
+    public class CarManager
     {
-        private readonly IMongoCollection<Car> cars;
-
         /// <summary>
-        /// Initialization the connection
+        /// get the collection from database
         /// </summary>
-        /// <param name="config"></param>
-        public CarService(IConfiguration config)
+        /// <returns></returns>
+        private static IMongoCollection<Car> loadCollection()
         {
-            MongoClient client = new MongoClient(config.GetConnectionString("TechnicalTestDDBB"));
-            IMongoDatabase ddbb = client.GetDatabase("TechnicalTestDDBB");
-            cars = ddbb.GetCollection<Car>("Cars");
+            MongoClient client = new MongoClient(AppSettings.ConnectionStrings.ServerAddress);
+            IMongoDatabase ddbb = client.GetDatabase(AppSettings.ConnectionStrings.DataBase);
+            return ddbb.GetCollection<Car>("Cars");
         }
 
         /// <summary>
         /// Get a list with all rows of the collection
         /// </summary>
         /// <returns></returns>
-        public List<Car> getAll()
+        public static List<Car> getAll()
         {
-            return cars.Find(x => true).ToList();
+            return loadCollection()?.Find(x => true).ToList();
         }
 
         /// <summary>
@@ -37,9 +36,9 @@ namespace Technical_Test.Services
         /// </summary>
         /// <param name="id">identify of document (String)</param>
         /// <returns></returns>
-        public Car getbyID(string id)
+        public static Car getbyID(string id)
         {
-            return cars.Find(x => x.Id.Equals(id)).FirstOrDefault();
+            return loadCollection()?.Find(x => x.Id.Equals(id)).FirstOrDefault();
         }
 
         /// <summary>
@@ -47,9 +46,9 @@ namespace Technical_Test.Services
         /// </summary>
         /// <param name="brand">document (Car)</param>
         /// <returns></returns>
-        public Car New(Car car)
-        {            
-            cars.InsertOne(car);
+        public static Car New(Car car)
+        {
+            loadCollection()?.InsertOne(car);
             return car;
         }
 
@@ -57,27 +56,27 @@ namespace Technical_Test.Services
         /// Update a document from collection, replancing a old document by the new document passed by parameters
         /// </summary>
         /// <param name="model">new document (Car)</param>
-        public void Update(Car car)
+        public static void Update(Car car)
         {
-            cars.ReplaceOne(x => x.Id.Equals(car.Id), car);
+            loadCollection()?.ReplaceOne(x => x.Id.Equals(car.Id), car);
         }
 
         /// <summary>
         /// Delete from collection the document passed by parameters
         /// </summary>
         /// <param name="model">document to delete (Car)</param>
-        public void Delete(Car car)
+        public static void Delete(Car car)
         {
-            cars.DeleteOne(x => x.Id.Equals(car.Id));
+            loadCollection()?.DeleteOne(x => x.Id.Equals(car.Id));
         }
 
         /// <summary>
         /// Delete from collection a document with a identify of document passed by parameters
         /// </summary>
         /// <param name="id">identify of document (String)</param>
-        public void DeletebyId(string id)
+        public static void DeletebyId(string id)
         {
-            cars.DeleteOne(x => x.Id.Equals(id));
+            loadCollection()?.DeleteOne(x => x.Id.Equals(id));
         }
 
     }
