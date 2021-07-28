@@ -8,17 +8,27 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Technical_Test.Models;
 using Technical_Test.DAL;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Technical_Test.Controllers
 {
+    [Authorize]
     public class CarController : Controller
     {
+        private readonly UserManager<SiteUser> _userManager;
+
+        public CarController(UserManager<SiteUser> userManager)
+        {
+            _userManager = userManager;
+        }
+
         public IActionResult listCars()
         {            
-            var cars = CarManager.getAll();
+
+            var cars = CarManager.getAll()?.Where(x=> x.User_id.Equals(_userManager.GetUserId(User)));
 
             ViewData["Models"] = ModelManager.getAll();
-
             ViewData["Brands"] = BrandManger.getAll();
 
             return View(cars);
@@ -38,6 +48,7 @@ namespace Technical_Test.Controllers
                 if (ModelState.IsValid)
                 {                    
                     car.NumberPlate = car.NumberPlate.ToUpper();
+                    car.User_id = _userManager.GetUserId(User);
                     CarManager.New(car);
                     ViewBag.Message = "Car added Suscessfully!";
                     ModelState.Clear();
@@ -101,6 +112,7 @@ namespace Technical_Test.Controllers
                 if (ModelState.IsValid)
                 {                    
                     car.NumberPlate = car.NumberPlate.ToUpper();
+                    car.User_id = _userManager.GetUserId(User);
                     CarManager.Update(car);
                     ViewBag.Message = "Car modify Suscessfully!";
                     ModelState.Clear();
