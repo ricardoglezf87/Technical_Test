@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Microsoft.AspNetCore.Authorization;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,13 +7,14 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Technical_Test.Models
-{
+{    
     public class Car
     {
-
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
+
+        public string User_id { get; set; }
 
         [Required(ErrorMessage = "Number plate is required")]
         public string NumberPlate { get; set; }

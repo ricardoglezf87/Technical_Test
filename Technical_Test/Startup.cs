@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Serialization;
-using Technical_Test.Services;
+using Technical_Test.Models;
+using AspNetCore.Identity.Mongo;
+using Technical_Test.Mailing;
+using Microsoft.AspNetCore.Authorization;
+using Policy;
+using Microsoft.AspNetCore.Components;
 using Technical_Test.Services.Setting;
 
 namespace Technical_Test
@@ -22,14 +19,33 @@ namespace Technical_Test
         {
             Configuration = configuration;
         }
-
-        [Inject]
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             Configuration.Get<AppSettings>();
+
+            services.AddIdentityMongoDbProvider<SiteUser>(identity =>
+            {
+                identity.Password.RequireDigit = false;
+                identity.Password.RequireLowercase = false;
+                identity.Password.RequireNonAlphanumeric = false;
+                identity.Password.RequireUppercase = false;
+                identity.Password.RequiredLength = 1;
+                identity.Password.RequiredUniqueChars = 0;                
+            },
+                mongo =>
+                {
+                    mongo.ConnectionString = $"{AppSettings.ConnectionStrings.ServerAddress}/{AppSettings.ConnectionStrings.DataBase}";
+                }
+            );
+
+            services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, HasClaimHandler>();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+            
             services.AddControllersWithViews();
         }
 
@@ -51,6 +67,7 @@ namespace Technical_Test
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
