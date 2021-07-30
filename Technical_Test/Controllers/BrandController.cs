@@ -16,8 +16,8 @@ namespace Technical_Test.Controllers
         [AllowAnonymous]
         public IActionResult listBrands()
         {            
-            ViewData["Models"] = ModelManager.getAll();            
-            ViewData["Brands"] = BrandManger.getAll();
+            ViewData["Models"] = ((IModelManager)new ModelManager()).getAll();            
+            ViewData["Brands"] = ((IBrandManager)new BrandManager()).getAll();
 
             return View();
         }

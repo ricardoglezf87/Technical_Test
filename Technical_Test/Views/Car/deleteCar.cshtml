@@ -8,7 +8,7 @@
 <hr />
 
 <div class="alert alert-danger">
-    <h5>Are you want to delete car - @Model.NumberPlate</h5>
+    <h5>Are you want to delete the car: @Model.NumberPlate?</h5>
     @using (Html.BeginForm("deleteCar", "Car", FormMethod.Post))
     {
         @Html.HiddenFor(m => m.Id)
