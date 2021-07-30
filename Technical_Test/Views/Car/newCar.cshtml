@@ -51,7 +51,7 @@
 
         <div class="form-group">
             @Html.LabelFor(m => m.Price, "Price")
-            @Html.TextBoxFor(m => m.Price, new { @class = "form-control numeric", placeholder = "Write the price, use comma for decimals" })
+            @Html.TextBoxFor(m => m.Price, new { @class = "form-control numeric", placeholder = "Write the price, be careful with comma and dot for decimal, depend of system" })
         </div>
 
         <input type="submit" class="btn btn-primary" value="Add" />

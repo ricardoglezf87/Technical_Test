@@ -11,29 +11,31 @@
 
 <section class="content">
     <div class="container">
+        @Html.ActionLink("Add a car", "newCar", "Car", null, new { @class = "btn btn-info mar-bot-15" })
         <div class="row">
+
             @foreach (var car in Model)
             {
                 var bra = (ViewData["Brands"] as List<Brand>)?.FirstOrDefault(x => x.Id.Equals(car.Brand_id))?.Descrip;
                 var mod = (ViewData["Models"] as List<Model>)?.FirstOrDefault(x => x.Id.Equals(car.Model_id))?.Descrip;
 
-                <div class="col-sm-4 col-md-4 col-lg-4 pad-bot-15">
-                    <div class="card card-body bg-light">
+            <div class="col-sm-4 col-md-4 col-lg-4 pad-bot-15">
+                <div class="card card-body bg-light">
 
-                        <h2 class="text-warning">@car.NumberPlate</h2>
-                        <ul>
-                            <li>@bra</li>
-                            <li>@mod</li>
-                        </ul>
-                        <p><h3>@car.Price?.ToString("C")</h3></p>
+                    <h2 class="text-warning">@car.NumberPlate</h2>
+                    <ul>
+                        <li>@bra</li>
+                        <li>@mod</li>
+                    </ul>
+                    <p><h3>@car.Price?.ToString("N2")</h3></p>
 
-                        <div class="align-items-center">
-                            @Html.ActionLink("Modify", "updateCar", "Car", new { car_id = car.Id }, new { @class = "btn btn-primary m1" })
-                            @Html.ActionLink("Delete", "deleteCar", "Car", new { car_id = car.Id }, new { @class = "btn btn-danger m1" })
-                            
-                        </div>
+                    <div class="align-items-center">
+                        @Html.ActionLink("Modify", "updateCar", "Car", new { car_id = car.Id }, new { @class = "btn btn-primary m1" })
+                        @Html.ActionLink("Delete", "deleteCar", "Car", new { car_id = car.Id }, new { @class = "btn btn-danger m1" })
+
                     </div>
                 </div>
+            </div>
             }
         </div>
     </div>

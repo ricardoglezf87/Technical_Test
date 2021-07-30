@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+
+    mongo:
+        container_name: mongoTechnicaltest
+        image: mongo
+        restart: always
+        volumes:
+            - /site:/data/db
+        ports:
+            - "27017:27017"
+
+
+    technical_test:
+        image: ${DOCKER_REGISTRY-}technicaltest
+        build:
+            context: .
+            dockerfile: Technical_Test/Dockerfile
+        ports:
+            - "8000:81"
+            - "44348:443"
+        depends_on:
+            - mongo
+
