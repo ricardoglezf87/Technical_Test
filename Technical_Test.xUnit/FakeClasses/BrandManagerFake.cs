@@ -12,7 +12,7 @@ namespace Technical_Test.xUnit.FakeClasses
 
     
 
-    class BrandManagerFake : IBrandManager
+    class BrandManagerFake : ICollectionManager<Brand>
     {
         private const string BBDD = "DBTest";
 

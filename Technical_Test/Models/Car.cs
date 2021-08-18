@@ -7,8 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Technical_Test.Models
-{    
-    public class Car
+{
+    [BsonIgnoreExtraElements]
+    public class Car: ICollection
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
@@ -28,6 +29,12 @@ namespace Technical_Test.Models
         [Required(ErrorMessage = "Price is required")]
         [DataType(DataType.Currency, ErrorMessage = "The price should be a number")]
         public double? Price { get; set; }
+
+        public string Brand_Descrip { get; set; }
+
+        public String Model_Descrip { get; set; }
+
+        public double? PriceIVA { get; set; }
 
     }
 }

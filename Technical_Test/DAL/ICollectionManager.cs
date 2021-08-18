@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -9,20 +10,20 @@ using Technical_Test.Services.Setting;
 
 namespace Technical_Test.DAL
 {
-    public interface ICarManager
+    public interface ICollectionManager<T> where T: Models.ICollection 
     {
         /// <summary>
         /// get the collection from database
         /// </summary>
         /// <returns></returns>
-        public IMongoCollection<Car> loadCollection();
+        public abstract IMongoCollection<T> loadCollection();
 
         /// <summary>
         /// Get a list with all rows of the collection
         /// </summary>
         /// <returns></returns>
-        public List<Car> getAll()
-        {
+        public List<T> getAll()
+        {            
             return loadCollection()?.Find(x => true).ToList();
         }
 
@@ -31,38 +32,38 @@ namespace Technical_Test.DAL
         /// </summary>
         /// <param name="id">identify of document (String)</param>
         /// <returns></returns>
-        public Car getbyID(string id)
+        public T getbyID(string id)
         {
-            return loadCollection()?.Find(x => x.Id.Equals(id)).FirstOrDefault();
+            return (loadCollection()?.Find(x => x.Id.Equals(id))).FirstOrDefault();
         }
 
         /// <summary>
         /// Insert into collection a document passed by parameters
         /// </summary>
-        /// <param name="brand">document (Car)</param>
+        /// <param name="document">document (Brand)</param>
         /// <returns></returns>
-        public Car New(Car car)
+        public T New(T document)
         {
-            loadCollection()?.InsertOne(car);
-            return car;
+            loadCollection()?.InsertOne(document);
+            return document;
         }
 
         /// <summary>
         /// Update a document from collection, replancing a old document by the new document passed by parameters
         /// </summary>
-        /// <param name="model">new document (Car)</param>
-        public void Update(Car car)
+        /// <param name="model">new document (Brand)</param>
+        public void Update(T document)
         {
-            loadCollection()?.ReplaceOne(x => x.Id.Equals(car.Id), car);
+            loadCollection()?.ReplaceOne(x => x.Id.Equals(document.Id), document);
         }
 
         /// <summary>
         /// Delete from collection the document passed by parameters
         /// </summary>
-        /// <param name="model">document to delete (Car)</param>
-        public void Delete(Car car)
+        /// <param name="model">document to delete (Brand)</param>
+        public void Delete(T document)
         {
-            loadCollection()?.DeleteOne(x => x.Id.Equals(car.Id));
+            loadCollection()?.DeleteOne(x => x.Id.Equals(document.Id));
         }
 
         /// <summary>
@@ -72,7 +73,6 @@ namespace Technical_Test.DAL
         public void DeletebyId(string id)
         {
             loadCollection()?.DeleteOne(x => x.Id.Equals(id));
-        }
-
+        }        
     }
 }

@@ -15,7 +15,7 @@ namespace Technical_Test.xUnit
     [Collection("ManagersTest")]   
     public class BrandMangerTest:IDisposable
     {
-        private readonly IBrandManager brandManager;
+        private readonly ICollectionManager<Brand> brandManager;
 
         public BrandMangerTest()
         {

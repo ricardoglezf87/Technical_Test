@@ -24,13 +24,8 @@ namespace Technical_Test.Controllers
         }
 
         public IActionResult listCars()
-        {
-            
-            var cars = ((ICarManager)new CarManager()).getAll()?.Where(x=> x.User_id.Equals(_userManager.GetUserId(User)));
-
-            ViewData["Models"] = ((IModelManager)new ModelManager()).getAll();
-            ViewData["Brands"] = ((IBrandManager)new BrandManager()).getAll();
-
+        {            
+            var cars = ((ICollectionManager<Car>)new CarManager()).getAll()?.Where(x=> x.User_id.Equals(_userManager.GetUserId(User)));
             return View(cars);
         }
 
@@ -49,7 +44,7 @@ namespace Technical_Test.Controllers
                 {                    
                     car.NumberPlate = car.NumberPlate.ToUpper();
                     car.User_id = _userManager.GetUserId(User);
-                    ((ICarManager)new CarManager()).New(car);
+                    ((ICollectionManager<Car>)new CarManager()).New(car);
                     ViewBag.Message = "Car added Suscessfully!";
                     ModelState.Clear();
                 }
@@ -85,20 +80,20 @@ namespace Technical_Test.Controllers
 
         public IActionResult deleteCar(string car_id)
         {            
-            var car = ((ICarManager)new CarManager()).getbyID(car_id);
+            var car = ((ICollectionManager<Car>)new CarManager()).getbyID(car_id);
             return View(car);
         }
 
         [HttpPost]
         public IActionResult deleteCar(Car car)
         {
-            ((ICarManager)new CarManager()).Delete(car);
+            ((ICollectionManager<Car>)new CarManager()).Delete(car);
             return RedirectToAction("listCars","Car");
         }
 
         public IActionResult updateCar(string car_id)
         {            
-            var car = ((ICarManager)new CarManager()).getbyID(car_id);
+            var car = ((ICollectionManager<Car>)new CarManager()).getbyID(car_id);
             ViewData["Brands"] = getBrands();
             ViewData["Models"] = getModels(car.Brand_id);
             return View(car);
@@ -113,7 +108,7 @@ namespace Technical_Test.Controllers
                 {                    
                     car.NumberPlate = car.NumberPlate.ToUpper();
                     car.User_id = _userManager.GetUserId(User);
-                    ((ICarManager)new CarManager()).Update(car);
+                    ((ICollectionManager<Car>)new CarManager()).Update(car);
                     ViewBag.Message = "Car modify Suscessfully!";
                     ModelState.Clear();
                 }
@@ -156,7 +151,7 @@ namespace Technical_Test.Controllers
 
             lSelec.Add(new SelectListItem() { Text = "Select a brand", Value = String.Empty });
 
-            foreach (var brand in ((IBrandManager)new BrandManager()).getAll())
+            foreach (var brand in ((ICollectionManager<Brand>)new BrandManager()).getAll())
             {
                 lSelec.Add(new SelectListItem() { Text = brand.Descrip, Value = brand.Id });
             }
@@ -175,7 +170,7 @@ namespace Technical_Test.Controllers
 
             lSelec.Add(new SelectListItem() { Text = "Select a model", Value = String.Empty });
 
-            foreach (var model in ((IModelManager)new ModelManager()).getbyIdBrand(brand_id))
+            foreach (var model in new ModelManager().getbyIdBrand(brand_id))
             {
                 lSelec.Add(new SelectListItem() { Text = model.Descrip, Value = model.Id });
             }

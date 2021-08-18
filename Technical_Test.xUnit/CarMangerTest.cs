@@ -15,14 +15,14 @@ namespace Technical_Test.xUnit
     [Collection("ManagersTest")]    
     public class CarMangerTest : IDisposable
     {
-        private readonly ICarManager carManager;       
+        private readonly ICollectionManager<Car> carManager;       
         private readonly List<Brand> brands;
         private readonly List<Model> models;
 
         public CarMangerTest()
         {
             carManager = new CarManagerFake();
-            IBrandManager brandManager = new BrandManagerFake();
+            ICollectionManager<Brand> brandManager = new BrandManagerFake();
 
             brands = new List<Brand>();
 
@@ -39,7 +39,7 @@ namespace Technical_Test.xUnit
             }
 
 
-            IModelManager modelManager = new ModelManagerFake();            
+            ICollectionManager<Model> modelManager = new ModelManagerFake();            
             models = new List<Model>();
 
             for (int i = 0; i < 100; i++)
@@ -64,12 +64,12 @@ namespace Technical_Test.xUnit
         /// <param name="model">Model by referencia (Model)</param>
         private void getRandomBrandModelbyIdModel(ref Brand brand,ref Model model)
         {
-            IModelManager modelManager = new ModelManagerFake();                        
+            ICollectionManager<Model> modelManager = new ModelManagerFake();                        
             List<Model> listModel;
 
             do {
                 brand = brands[(int)Generate.Number(0, 99)];
-                listModel = modelManager.getbyIdBrand(brand.Id);
+                listModel = ((ModelManagerFake)modelManager).getbyIdBrand(brand.Id);
             } while (listModel.Count == 0) ;
 
             model = modelManager.getbyID(listModel[(int)Generate.Number(0, listModel.Count - 1)].Id);

@@ -9,7 +9,7 @@ using Technical_Test.Models;
 
 namespace Technical_Test.xUnit.FakeClasses
 {
-    class CarManagerFake : ICarManager
+    class CarManagerFake : ICollectionManager<Car>
     {
         private const string BBDD = "DBTest";
 

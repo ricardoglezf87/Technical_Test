@@ -15,13 +15,13 @@ namespace Technical_Test.xUnit
     [Collection("ManagersTest")]    
     public class ModelMangerTest: IDisposable
     {
-        private readonly IModelManager modelManager;       
+        private readonly ICollectionManager<Model> modelManager;       
         private readonly List<Brand> brands;
 
         public ModelMangerTest()
         {
             modelManager = new ModelManagerFake();
-            IBrandManager brandManager = new BrandManagerFake();
+            ICollectionManager<Brand> brandManager = new BrandManagerFake();
             brands = new List<Brand>();
 
             for (int i = 0; i < 100; i++)
@@ -193,7 +193,7 @@ namespace Technical_Test.xUnit
             string descrip = Generate.Words(1, true, true);
             brand.Descrip = descrip;
 
-            brand = ((IBrandManager)new BrandManagerFake()).New(brand);
+            brand = ((ICollectionManager<Brand>)new BrandManagerFake()).New(brand);
 
             var models = new List<Model>();
             for (int i = 0; i < 100; i++)
@@ -211,7 +211,7 @@ namespace Technical_Test.xUnit
                 model.Id.Should().NotBeNull();
             }
 
-            var modelsDDBB = modelManager.getbyIdBrand(brand.Id);
+            var modelsDDBB = ((ModelManagerFake)modelManager).getbyIdBrand(brand.Id);
             models.Count.Should().Be(modelsDDBB.Count);
             modelsDDBB.Should().BeEquivalentTo(models);
 

@@ -9,7 +9,7 @@ using Technical_Test.Models;
 
 namespace Technical_Test.xUnit.FakeClasses
 {
-    class ModelManagerFake : IModelManager
+    class ModelManagerFake : ICollectionManager<Model>
     {
         private const string BBDD = "DBTest";
 
@@ -39,6 +39,16 @@ namespace Technical_Test.xUnit.FakeClasses
         {
             loadCollection()?.Database.Client.DropDatabase(BBDD);
         }
-       
+
+        /// <summary>
+        /// Get a document through of identify of brand getted by parameters
+        /// </summary>
+        /// <param name="brand_id">Identify of brand (String)</param>
+        /// <returns></returns>
+        public List<Model> getbyIdBrand(string brand_id)
+        {
+            return loadCollection()?.Find(x => x.Brand_id.Equals(brand_id)).ToList();
+        }
+
     }
 }

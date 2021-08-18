@@ -16,18 +16,16 @@
 
             @foreach (var car in Model)
             {
-                var bra = (ViewData["Brands"] as List<Brand>)?.FirstOrDefault(x => x.Id.Equals(car.Brand_id))?.Descrip;
-                var mod = (ViewData["Models"] as List<Model>)?.FirstOrDefault(x => x.Id.Equals(car.Model_id))?.Descrip;
-
             <div class="col-sm-4 col-md-4 col-lg-4 pad-bot-15">
                 <div class="card card-body bg-light">
 
                     <h2 class="text-warning">@car.NumberPlate</h2>
                     <ul>
-                        <li>@bra</li>
-                        <li>@mod</li>
+                        <li>@car.Brand_Descrip</li>
+                        <li>@car.Model_Descrip</li>
                     </ul>
-                    <p><h3>@car.Price?.ToString("N2")</h3></p>
+                    <p><h4>@car.Price?.ToString("N2")</h4></p>
+                    <p><h2>@car.PriceIVA?.ToString("N2")</h2></p>
 
                     <div class="align-items-center">
                         @Html.ActionLink("Modify", "updateCar", "Car", new { car_id = car.Id }, new { @class = "btn btn-primary m1" })

@@ -10,15 +10,15 @@ using Technical_Test.Services.Setting;
 
 namespace Technical_Test.DAL
 {
-    public class BrandManager : IBrandManager
+    public class BrandManager : ICollectionManager<Brand>
     {
 
         /// <summary>
         /// get the collection from database
         /// </summary>
         /// <returns></returns>
-        IMongoCollection<Brand> IBrandManager.loadCollection()
-        {
+        public IMongoCollection<Brand> loadCollection()
+    {
             MongoClient client = new MongoClient(AppSettings.ConnectionStrings.ServerAddress);
             IMongoDatabase ddbb = client.GetDatabase(AppSettings.ConnectionStrings.DataBase);
             return ddbb.GetCollection<Brand>("Brands");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Technical_Test.Models
 {
-    public class Brand
+    public class Brand : ICollection
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
